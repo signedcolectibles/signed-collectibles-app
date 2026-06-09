@@ -45,25 +45,25 @@ export default function SignedCollectiblesApp() {
 
   // Cargar datos iniciales
   useEffect(() => {
+    const cargarDatos = async () => {
+      setLoading(true);
+      try {
+        const [invRes, cliRes] = await Promise.all([
+          supabase.from('inventario').select('id, nombre_pieza, jugador, precio_venta, estado').eq('estado', 'disponible'),
+          supabase.from('clientes').select('id, nombre, email, tipo_cliente').eq('activo', true)
+        ]);
+
+        if (invRes.data) setInventario(invRes.data);
+        if (cliRes.data) setClientes(cliRes.data);
+      } catch (err) {
+        console.error('Error cargando datos:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     cargarDatos();
   }, []);
-
-  const cargarDatos = async () => {
-    setLoading(true);
-    try {
-      const [invRes, cliRes] = await Promise.all([
-        supabase.from('inventario').select('id, nombre_pieza, jugador, precio_venta, estado').eq('estado', 'disponible'),
-        supabase.from('clientes').select('id, nombre, email, tipo_cliente').eq('activo', true)
-      ]);
-
-      if (invRes.data) setInventario(invRes.data);
-      if (cliRes.data) setClientes(cliRes.data);
-    } catch (err) {
-      mostrarMensaje('Error al cargar datos: ' + err.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const mostrarMensaje = (texto, tipo = 'exito') => {
     setMensaje({ texto, tipo });
@@ -102,7 +102,14 @@ export default function SignedCollectiblesApp() {
         estado_venta: 'pendiente',
         origen: 'whatsapp'
       });
-      cargarDatos();
+
+      // Recargar datos
+      const [invRes, cliRes] = await Promise.all([
+        supabase.from('inventario').select('id, nombre_pieza, jugador, precio_venta, estado').eq('estado', 'disponible'),
+        supabase.from('clientes').select('id, nombre, email, tipo_cliente').eq('activo', true)
+      ]);
+      if (invRes.data) setInventario(invRes.data);
+      if (cliRes.data) setClientes(cliRes.data);
     } catch (err) {
       mostrarMensaje('Error al crear venta: ' + err.message, 'error');
     } finally {
@@ -140,7 +147,14 @@ export default function SignedCollectiblesApp() {
         ubicacion: 'CDMX',
         tipo_cliente: 'coleccionista'
       });
-      cargarDatos();
+
+      // Recargar datos
+      const [invRes, cliRes] = await Promise.all([
+        supabase.from('inventario').select('id, nombre_pieza, jugador, precio_venta, estado').eq('estado', 'disponible'),
+        supabase.from('clientes').select('id, nombre, email, tipo_cliente').eq('activo', true)
+      ]);
+      if (invRes.data) setInventario(invRes.data);
+      if (cliRes.data) setClientes(cliRes.data);
     } catch (err) {
       mostrarMensaje('Error al crear cliente: ' + err.message, 'error');
     } finally {
@@ -190,7 +204,14 @@ export default function SignedCollectiblesApp() {
         precio_venta: '',
         stock_fisico: 0
       });
-      cargarDatos();
+
+      // Recargar datos
+      const [invRes, cliRes] = await Promise.all([
+        supabase.from('inventario').select('id, nombre_pieza, jugador, precio_venta, estado').eq('estado', 'disponible'),
+        supabase.from('clientes').select('id, nombre, email, tipo_cliente').eq('activo', true)
+      ]);
+      if (invRes.data) setInventario(invRes.data);
+      if (cliRes.data) setClientes(cliRes.data);
     } catch (err) {
       mostrarMensaje('Error al crear pieza: ' + err.message, 'error');
     } finally {
